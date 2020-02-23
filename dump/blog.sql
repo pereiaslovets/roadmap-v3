@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Фев 20 2020 г., 22:51
+-- Время создания: Фев 23 2020 г., 20:05
 -- Версия сервера: 10.4.11-MariaDB
 -- Версия PHP: 7.4.1
 
@@ -25,6 +25,25 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Структура таблицы `author`
+--
+
+CREATE TABLE `author` (
+  `author_id` int(11) NOT NULL,
+  `author_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Дамп данных таблицы `author`
+--
+
+INSERT INTO `author` (`author_id`, `author_name`) VALUES
+(2, 'Not tester'),
+(1, 'Tester');
+
+-- --------------------------------------------------------
+
+--
 -- Структура таблицы `post`
 --
 
@@ -33,7 +52,7 @@ CREATE TABLE `post` (
   `title` varchar(200) NOT NULL,
   `content` text NOT NULL,
   `date_created` date NOT NULL,
-  `author` varchar(100) NOT NULL
+  `author` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -68,9 +87,7 @@ CREATE TABLE `post_tag` (
 
 INSERT INTO `post_tag` (`id`, `post_id`, `tag_id`) VALUES
 (1, 1, 1),
-(2, 2, 2),
-(3, 3, 2),
-(4, 4, 2);
+(2, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -98,10 +115,49 @@ INSERT INTO `tag` (`id`, `name`) VALUES
 --
 
 --
+-- Индексы таблицы `author`
+--
+ALTER TABLE `author`
+  ADD UNIQUE KEY `author_id` (`author_id`),
+  ADD KEY `author_name` (`author_name`);
+
+--
+-- Индексы таблицы `post`
+--
+ALTER TABLE `post`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`),
+  ADD KEY `author` (`author`);
+
+--
+-- Индексы таблицы `post_tag`
+--
+ALTER TABLE `post_tag`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `tag_id` (`tag_id`);
+
+--
 -- Индексы таблицы `tag`
 --
 ALTER TABLE `tag`
-  ADD KEY `id` (`id`);
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Ограничения внешнего ключа сохраненных таблиц
+--
+
+--
+-- Ограничения внешнего ключа таблицы `author`
+--
+ALTER TABLE `author`
+  ADD CONSTRAINT `author_ibfk_1` FOREIGN KEY (`author_name`) REFERENCES `post` (`author`);
+
+--
+-- Ограничения внешнего ключа таблицы `post_tag`
+--
+ALTER TABLE `post_tag`
+  ADD CONSTRAINT `post_tag_ibfk_1` FOREIGN KEY (`id`) REFERENCES `post` (`id`),
+  ADD CONSTRAINT `post_tag_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
