@@ -49,4 +49,4 @@
 		JOIN post_tags ON post.id = post_tags.post_id
 		GROUP BY user.name
 		ORDER BY sum DESC
-		LIMIT 5
+		LIMIT 5 
